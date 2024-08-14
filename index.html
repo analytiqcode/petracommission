@@ -5,51 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commission Plan Overview</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        h1 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
-        th { background-color: #f2f2f2; }
-        td:first-child, th:first-child { text-align: left; }
-        select { margin-bottom: 20px; }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls, .summary {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .summary {
+            background-color: #e8f8e8;
+            font-size: 1.1em;
+        }
+        label {
+            font-weight: bold;
+            color: #34495e;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #bdc3c7;
+            background-color: #fff;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+        }
+        td:first-child, th:first-child {
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e8f6ff;
+        }
+        th:last-child {
+            background-color: #ffeb3b;
+            color: #000;
+        }
     </style>
 </head>
 <body>
-    <h1>Commission Plan Overview</h1>
-    
-    <label for="ambassadorFee">Ambassador Fee: </label>
-    <select id="ambassadorFee"></select>
+    <div class="container">
+        <h1>Commission Plan Overview</h1>
+        
+        <div class="controls">
+            <label for="ambassadorFee">Ambassador Fee: </label>
+            <select id="ambassadorFee"></select>
+        </div>
 
-    <table id="commissionTable">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Company Payout</th>
-                <th>Tier 1 Commission</th>
-                <th>Recruitment Fee</th>
-                <th>Ambassador Fee</th>
-                <th>Tier 1 GP%</th>
-                <th>Tier 1 + Recruitment GM%</th>
-                <th>Ambassador + Tier 1 GP%</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <div id="summary" class="summary">
+            <h2>Estimated Gross Margin Summary</h2>
+            <p>Simple Average Gross Margin: <span id="averageGM"></span></p>
+            <p>Weighted Average Gross Margin: <span id="weightedAverageGM"></span></p>
+        </div>
+
+        <table id="commissionTable">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Company Payout</th>
+                    <th>Tier 1 Commission</th>
+                    <th>Recruitment Fee</th>
+                    <th>Ambassador Fee</th>
+                    <th>Tier 1 GP%</th>
+                    <th>Tier 1 + Recruitment GM%</th>
+                    <th>Ambassador + Tier 1 GP%</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         const products = [
-            { name: "Fiber Internet - 1000 Mbps", payout: 500, tier1: 250, recruitment: 15 },
-            { name: "Fiber Internet - 1000 Mbps + Total Home Wi-Fi", payout: 525, tier1: 250, recruitment: 15 },
-            { name: "Fiber Internet - 2000 Mbps", payout: 600, tier1: 350, recruitment: 15 },
-            { name: "Fiber Internet - 2000 Mbps + Total Home Wi-Fi", payout: 625, tier1: 350, recruitment: 15 },
-            { name: "Fiber Internet - 500 Mbps", payout: 350, tier1: 150, recruitment: 15 },
-            { name: "All-In Gig", payout: 500, tier1: 250, recruitment: 15 },
-            { name: "All-In 2 Gig", payout: 600, tier1: 350, recruitment: 15 },
-            { name: "Speeds up to 1 Gig with reward card", payout: 500, tier1: 250, recruitment: 15 }
+            { name: "Fiber Internet - 1000 Mbps", payout: 500, tier1: 250, recruitment: 15, weight: 0.24 },
+            { name: "Fiber Internet - 1000 Mbps + Total Home Wi-Fi", payout: 525, tier1: 250, recruitment: 15, weight: 0.50 },
+            { name: "Fiber Internet - 2000 Mbps", payout: 600, tier1: 350, recruitment: 15, weight: 0.03 },
+            { name: "Fiber Internet - 2000 Mbps + Total Home Wi-Fi", payout: 625, tier1: 350, recruitment: 15, weight: 0.19 },
+            { name: "Fiber Internet - 500 Mbps", payout: 350, tier1: 150, recruitment: 15, weight: 0.00 },
+            { name: "All-In Gig", payout: 500, tier1: 250, recruitment: 15, weight: 0.02 },
+            { name: "All-In 2 Gig", payout: 600, tier1: 350, recruitment: 15, weight: 0.01 },
+            { name: "Speeds up to 1 Gig with reward card", payout: 500, tier1: 250, recruitment: 15, weight: 0.01 }
         ];
 
         const ambassadorFeeSelect = document.getElementById('ambassadorFee');
         const tableBody = document.querySelector('#commissionTable tbody');
+        const averageGMSpan = document.getElementById('averageGM');
+        const weightedAverageGMSpan = document.getElementById('weightedAverageGM');
 
         function initializeAmbassadorFeeOptions() {
             for (let i = 3; i <= 20; i++) {
@@ -62,12 +137,14 @@
         }
 
         function calculatePercentage(payout, deduction) {
-            return ((payout - deduction) / payout * 100).toFixed(1) + '%';
+            return ((payout - deduction) / payout * 100).toFixed(1);
         }
 
         function updateTable() {
             const ambassadorFee = parseInt(ambassadorFeeSelect.value);
             tableBody.innerHTML = '';
+            let totalGM = 0;
+            let weightedTotalGM = 0;
 
             products.forEach(product => {
                 const row = tableBody.insertRow();
@@ -76,10 +153,19 @@
                 row.insertCell().textContent = `$${product.tier1}`;
                 row.insertCell().textContent = `$${product.recruitment}`;
                 row.insertCell().textContent = `$${ambassadorFee}`;
-                row.insertCell().textContent = calculatePercentage(product.payout, product.tier1);
-                row.insertCell().textContent = calculatePercentage(product.payout, product.tier1 + product.recruitment);
-                row.insertCell().textContent = calculatePercentage(product.payout, product.tier1 + ambassadorFee);
+                row.insertCell().textContent = calculatePercentage(product.payout, product.tier1) + '%';
+                row.insertCell().textContent = calculatePercentage(product.payout, product.tier1 + product.recruitment) + '%';
+                const ambTier1GP = calculatePercentage(product.payout, product.tier1 + ambassadorFee);
+                row.insertCell().textContent = ambTier1GP + '%';
+                
+                totalGM += parseFloat(ambTier1GP);
+                weightedTotalGM += parseFloat(ambTier1GP) * product.weight;
             });
+
+            const averageGM = (totalGM / products.length).toFixed(1) + '%';
+            const weightedAverageGM = weightedTotalGM.toFixed(1) + '%';
+            averageGMSpan.textContent = averageGM;
+            weightedAverageGMSpan.textContent = weightedAverageGM;
         }
 
         initializeAmbassadorFeeOptions();
